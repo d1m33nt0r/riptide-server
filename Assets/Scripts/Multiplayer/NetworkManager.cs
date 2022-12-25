@@ -6,12 +6,14 @@ namespace Multiplayer
 {
     public enum ServerToClientID : ushort
     {
-        playerSpawned = 1
+        playerSpawned = 1,
+        playerMovement
     }
     
     public enum ClientToServerID : ushort
     {
-        name = 1
+        name = 1,
+        inputs
     }
     
     public class NetworkManager : MonoBehaviour
