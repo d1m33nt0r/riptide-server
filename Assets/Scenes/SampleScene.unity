@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f7f433b05c74a0db5bc476c290a0056, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  port: 7777
+  port: 7778
   maxClientsCount: 10
 --- !u!4 &765435224
 Transform:

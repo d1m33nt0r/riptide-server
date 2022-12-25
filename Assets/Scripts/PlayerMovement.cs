@@ -1,4 +1,3 @@
-using System;
 using Multiplayer;
 using RiptideNetworking;
 using UnityEngine;
@@ -60,6 +59,8 @@ namespace DefaultNamespace
                 .Normalize(cameraProxy.right * inputDirection.x + 
                            FlattenVector3(Vector3.Normalize(cameraProxy.forward)) * inputDirection.y);
 
+            moveDirection *= moveSpeed;
+            
             if (sprint) moveDirection *= 2f;
 
             if (controller.isGrounded)

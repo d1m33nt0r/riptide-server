@@ -21,9 +21,9 @@ public class Player : MonoBehaviour
 
     public static void Spawn(ushort ID, string username)
     {
-        foreach (var othePlayer in list.Values)
+        foreach (var otherPlayer in list.Values)
         {
-            othePlayer.SendSpawned(ID);
+            otherPlayer.SendSpawned(ID);
         }
         
         var player = Instantiate(GameLogic.Singleton.PlayerPrefab, new Vector3(0f, 1f, 0f), Quaternion.identity)
@@ -63,12 +63,13 @@ public class Player : MonoBehaviour
         Spawn(fromClientID, message.GetString());
     }
 
-    [MessageHandler((ushort)ClientToServerID.inputs)]
+    [MessageHandler((ushort)ClientToServerID.input)]
     private static void Input(ushort fromClientID, Message message)
     {
         if (list.TryGetValue(fromClientID, out Player player))
         {
-            player.Movement.SetInputs(message.GetBools(6), message.GetVector3());
+            var bools = message.GetBools(6);
+            player.Movement.SetInputs(bools, message.GetVector3());
         }
     }
 

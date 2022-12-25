@@ -13,7 +13,7 @@ namespace Multiplayer
     public enum ClientToServerID : ushort
     {
         name = 1,
-        inputs
+        input
     }
     
     public class NetworkManager : MonoBehaviour
@@ -66,7 +66,8 @@ namespace Multiplayer
 
         private void PlayerLeft(object sender, ClientDisconnectedEventArgs e)
         {
-            Destroy(Player.list[e.Id].gameObject);
+            if (Player.list.TryGetValue(e.Id, out Player player))
+                Destroy(player.gameObject);
         }
     }
 }
