@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using DefaultNamespace;
 using Multiplayer;
 using RiptideNetworking;
 using UnityEngine;
@@ -11,7 +11,9 @@ public class Player : MonoBehaviour
     public ushort ID { get; private set; }
     public string Username { get; private set; }
 
-
+    public PlayerMovement Movement => movement;
+    
+    [SerializeField] private PlayerMovement movement;
     private void OnDestroy()
     {
         list.Remove(ID);
@@ -59,6 +61,15 @@ public class Player : MonoBehaviour
     public static void Name(ushort fromClientID, Message message)
     {
         Spawn(fromClientID, message.GetString());
+    }
+
+    [MessageHandler((ushort)ClientToServerID.inputs)]
+    private static void Input(ushort fromClientID, Message message)
+    {
+        if (list.TryGetValue(fromClientID, out Player player))
+        {
+            player.Movement.SetInputs(message.GetBools(6), message.GetVector3());
+        }
     }
 
     #endregion

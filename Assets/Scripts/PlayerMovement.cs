@@ -1,4 +1,6 @@
 using System;
+using Multiplayer;
+using RiptideNetworking;
 using UnityEngine;
 
 namespace DefaultNamespace
@@ -34,6 +36,17 @@ namespace DefaultNamespace
             inputs = new bool[6];
         }
 
+        private void FixedUpdate()
+        {
+            var inputDirection = Vector2.zero;
+            if (inputs[0]) inputDirection.y += 1;
+            if (inputs[1]) inputDirection.y -= 1;
+            if (inputs[2]) inputDirection.x -= 1;
+            if (inputs[3]) inputDirection.x += 1;
+            
+            Move(inputDirection, inputs[4], inputs[5]);
+        }
+
         private void Initialize()
         {
             gravityAcceleration = gravity * Time.fixedDeltaTime * Time.fixedDeltaTime;
@@ -59,12 +72,29 @@ namespace DefaultNamespace
             yVelocity += gravityAcceleration;
             moveDirection.y = yVelocity;
             controller.Move(moveDirection);
+
+            SendMovement();
         }
 
         private Vector3 FlattenVector3(Vector3 vector3)
         {
             vector3.y = 0;
             return vector3;
+        }
+
+        public void SetInputs(bool[] inputs, Vector3 forward)
+        {
+            this.inputs = inputs;
+            cameraProxy.forward = forward;
+        }
+
+        private void SendMovement()
+        {
+            var message = Message.Create(MessageSendMode.unreliable, ServerToClientID.playerMovement);
+            message.AddUShort(player.ID);
+            message.AddVector3(transform.position);
+            message.AddVector3(cameraProxy.forward);
+            NetworkManager.Singleton.Server.SendToAll(message);
         }
     }
 }
